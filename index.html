@@ -3,159 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FixAI Pro - Universal Board Assistant</title>
+    <title>FixAI OS Pro - Luxury Hardware Intelligence</title>
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --blue: #58a6ff; --red: #f85149; --text: #c9d1d9; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding-bottom: 30px; }
-        header { width: 100%; background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; border-bottom: 1px solid #30363d; }
-        .logo { font-size: 22px; font-weight: bold; color: var(--blue); }
-        .lang-btn { background: var(--blue); color: #fff; border: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; width: 100%; max-width: 480px; box-sizing: border-box; }
-        .box { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .box h3 { margin: 10px 0 0 0; font-size: 15px; }
-        .section { display: none; width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; }
-        .back-btn { background: #21262d; border: 1px solid #30363d; color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 15px; font-weight: bold; }
-        .panel { width: 100%; height: 260px; background: #000; border-radius: 12px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #30363d; }
-        .dot { position: absolute; width: 35px; height: 35px; border: 3px solid var(--red); border-radius: 50%; background: rgba(248,81,73,0.2); display: none; }
-        .action-btn { width: 100%; background: #238636; color: #fff; border: none; padding: 14px; border-radius: 8px; margin-top: 15px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .chat-box { border: 1px solid #30363d; border-radius: 8px; height: 180px; overflow-y: auto; padding: 10px; background: #070a0e; margin-bottom: 10px; font-size: 14px; }
-        .chat-input { display: flex; gap: 8px; }
-        .chat-input input { flex: 1; padding: 12px; background: var(--card); border: 1px solid #30363d; color: #fff; border-radius: 6px; }
-        select { width: 100%; padding: 12px; background: var(--card); color: #fff; border: 1px solid #30363d; border-radius: 6px; font-size: 15px; margin-bottom: 15px; }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="logo">⚡ FixAI Pro</div>
-        <button class="lang-btn" onclick="window.toggleLanguage()">English</button>
-    </header>
-
-    <!-- मेनू ग्रिड -->
-    <div class="grid" id="menuView">
-        <div class="box" onclick="window.goSection('scanner')"><span>🔍</span><h3>AI फॉल्ट स्कैनर</h3></div>
-        <div class="box" onclick="window.goSection('teacher')"><span>👨‍🏫</span><h3>लाइव AI टीचर</h3></div>
-        <div class="box" onclick="window.goSection('smd')"><span>🔥</span><h3>मशीन सेटिंग्स</h3></div>
-        <div class="box" onclick="window.goSection('chat')"><span>🎙️</span><h3>वॉइस व चैट</h3></div>
-    </div>
-
-    <!-- स्कैनर -->
-    <div id="scannerSection" class="section">
-        <button class="back-btn" onclick="window.goBack()">⬅ मेनू</button>
-        <select id="modelSel" onchange="window.syncModel()">
-            <option value="mi5">Xiaomi Redmi 5 (Live)</option>
-            <option value="mi4">Xiaomi Redmi 4 (Live)</option>
-            <option value="ip13">iPhone 13 (Sandwich)</option>
-        </select>
-        <div class="panel">
-            <span style="font-size:35px;">📱</span>
-            <b id="mTitle" style="color:var(--blue); margin-top:5px;">Redmi 5 Board</b>
-            <small id="mSub" style="color:#8b949e;">Line: VBAT | Target: PM8937</small>
-            <div id="targetDot" class="dot"></div>
-        </div>
-        <button class="action-btn" onclick="window.runScan()">स्कैन शुरू करें</button>
-    </div>
-
-    <!-- टीचर -->
-    <div id="teacherSection" class="section">
-        <button class="back-btn" onclick="window.goBack()">⬅ मेनू</button>
-        <div class="panel">
-            <span style="font-size:35px;">🔧</span>
-            <b style="color:#238636; margin-top:5px;">Jumper Tracking Active</b>
-        </div>
-        <p style="background:var(--card); padding:12px; border-radius:6px; font-size:14px; border:1px solid #30363d;">
-            <b>AI गाइड:</b> बोर्ड स्थिर रखें। PM8937 के पास बक कॉइल्स ट्रेस हो रहे हैं...
-        </p>
-    </div>
-
-    <!-- SMD -->
-    <div id="smdSection" class="section">
-        <button class="back-btn" onclick="window.goBack()">⬅ Main</button>
-        <select id="smdSel" onchange="window.syncSmd()">
-            <option value="mi5">Redmi 5 - Power IC (PM8937)</option>
-            <option value="mi4">Redmi 4 - Network IC (WTR2965)</option>
-            <option value="past">Android - Pasted IC Glue Cut</option>
-        </select>
-        <div id="smdText" style="background:var(--card); padding:20px; border-radius:8px; font-size:16px; color:var(--blue); border:1px solid #30363d; font-weight:bold;">
-            Heat: 330°C | Air: 3.5 (Quick 857DW+)
-        </div>
-    </div>
-
-    <!-- चैट -->
-    <div id="chatSection" class="section">
-        <button class="back-btn" onclick="window.goBack()">⬅ Main</button>
-        <div class="chat-box" id="boxChat">
-            <p style="color:var(--blue)"><b>AI:</b> हेलो निकेश भाई! Redmi 4 या 5 की शॉर्टिंग या डायोड वैल्यू पूछिए।</p>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="insChat" placeholder="जैसे: Redmi 5 full short value...">
-            <button onclick="window.hitChat()" style="padding:12px; background:var(--blue); border:none; color:#fff; border-radius:6px; font-weight:bold;">Send</button>
-        </div>
-    </div>
-
-    <script>
-        var lang = 'hi';
-        var db = {
-            mi5: { t: "Redmi 5 Board", s: "Line: VBAT | Target: PM8937", h: "PM8937 के ऊपर का बक कैप SHORT (0.002v) है! 4V इंजेक्ट करें।", e: "Buck capacitor above PM8937 is SHORT (0.002v)! Inject 4V." },
-            mi4: { t: "Redmi 4 Board", s: "Line: RF Network | Target: WTR2965", h: "WTR2965 के पास की लाइन HALF SHORT (0.120v) है। IC बदलें।", e: "Line near WTR2965 is HALF SHORT (0.120v). Replace IC." },
-            ip13: { t: "iPhone 13 Board", s: "Main Rail: PP_VDD_MAIN", h: "VDD_MAIN लीक है (0.085v GR)। लेयर्स अलग करें।", e: "VDD_MAIN is leaking (0.085v GR). Separate layers." }
-        };
-
-        window.toggleLanguage = function() {
-            lang = lang === 'hi' ? 'en' : 'hi';
-            document.querySelector('.lang-btn').innerText = lang === 'hi' ? 'English' : 'हिंदी';
-        };
-
-        window.goSection = function(id) {
-            document.getElementById('menuView').style.display = 'none';
-            document.getElementById(id + 'Section').style.display = 'block';
-        };
-
-        window.goBack = function() {
-            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-            document.getElementById('targetDot').style.display = 'none';
-            document.getElementById('menuView').style.display = 'grid';
-        };
-
-        window.syncModel = function() {
-            var m = document.getElementById('modelSel').value;
-            document.getElementById('mTitle').innerText = db[m].t;
-            document.getElementById('mSub').innerText = db[m].s;
-            document.getElementById('targetDot').style.display = 'none';
-        };
-
-        window.runScan = function() {
-            var m = document.getElementById('modelSel').value;
-            document.getElementById('targetDot').style.display = 'block';
-            setTimeout(function() {
-                alert(lang === 'hi' ? db[m].h : db[m].e);
-            }, 150);
-        };
-
-        window.syncSmd = function() {
-            var v = document.getElementById('smdSel').value;
-            var t = document.getElementById('smdText');
-            if(v === 'mi5') t.innerHTML = "Heat: 330°C | Air: 3.5<br><small style='color:#8b949e'>PM8937: नॉन-पेंटेड, 10 सेकंड में सेफ़ लिफ्ट।</small>";
-            if(v === 'mi4') t.innerHTML = "Heat: 320°C | Air: 3<br><small style='color:#8b949e'>WTR2965: सिल्वर टेप लगाएँ, सेंसिटिव RF ज़ोन।</small>";
-            if(v === 'past') t.innerHTML = "Heat: 365°C | Air: 4<br><small style='color:#8b949e'>Pasted IC: पहले 250°C पर ग्लू कटिंग करें।</small>";
-        };
-
-        window.hitChat = function() {
-            var i = document.getElementById('insChat');
-            var txt = i.value.toLowerCase();
-            if(!txt) return;
-            var b = document.getElementById('boxChat');
-            b.innerHTML += "<p><b>You:</b> " + i.value + "</p>";
-            
-            setTimeout(function() {
-                var r = "मल्टीमीटर को डायोड रेंज पर सेट करके सिग्नल्स चेक करें।";
-                if(txt.includes('5')) r = "Redmi 5 में VBAT पर 0.002v फुल शॉर्ट दिखाता है। चार्जिंग IC के पास के कैप्स चेक करें।";
-                if(txt.includes('4')) r = "Redmi 4 में नो-सर्विस के लिए WTR2965 का GR वैल्यू (नॉर्मल 0.380v) चेक करें।";
-                b.innerHTML += "<p style='color:var(--blue)'><b>AI:</b> " + r + "</p>";
-                b.scrollTop = b.scrollHeight;
-            }, 300);
-            i.value = '';
-        };
-    </script>
-</body>
-</html>
+        :root {
+            --os-bg: #030712;
+            --glass-bg: rgba(17, 24, 39, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --luxury-gold: #fbbf24;
+            --neon-blue: #38bdf8;
+            --neon-green: #34d399;
+            --neon-red: #f87171;
+            --text-premium: #f3f4f6;
+            --text-dim: #9ca3af;
+        }
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #0f172a, var(--os-bg));
+            color: var(--text-premium);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 50px;
+            overflow-x: hidden;
+        }
+        header {
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .os-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .os-logo {
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--luxury-gold), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+        .lang-toggle {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--luxury-gold);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .lang-toggle:hover {
+            background: var(--luxury-gold);
+            color: #000;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+        }
+        .os-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            box-sizing: border-box;
+            animation: fadeInOS 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes fadeInOS {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .android-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .app-icon-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .app-icon-box:hover {
+            border-color: var(--luxury-gold);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(251, 191, 36, 0.15);
+        }
+        .icon-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .app-icon-box:hover .icon-circle {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-color: var(--luxury-gold);
+            transform: rotate(5deg);
+        }
+        .app-icon-box h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            color: var(--text-premium);
+        }
+        .os-card {
+            display: none;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 22px;
+            margin-top: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: slideUpOS 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideUpOS {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .os-back-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-premium);
+            padding: 12px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            margin-bottom: 22px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .os-back-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--text-premium);
+        }
+        .luxury-panel {
+            width: 100%;
+            height: 260px;
+            background: #020408;
+            border-radius: 18px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+        .scan-laser {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
+            top: 0;
+            animation: luxuryScan 2.5s ease-in-out infinite;
+            display: none;
+            box-shadow: 0 0 10px var(--luxury-gold);
+        }
+        @keyframes luxuryScan {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+        .fault-glow {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--neon-red);
+            border-radius: 50%;
+            background: rgba(248,113,113,0.2);
+            display: none;
+            box-shadow: 0 0 20px var(--neon-red);
+            animation: pulseGlow 1.5s infinite;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.25); opacity: 0.3; }
+        }
+        .luxury-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--luxury-gold), #d97706);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(251,191,36,0.25);
+            transition: all 0.3s;
+        }
+        .luxury-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251,191,36,0.4);
+        }
+        .terminal-screen {
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            height: 240px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .luxury-input-group {
+            display: flex;
+            gap: 12px;
+        }
+        .luxury-input-group input {
+            flex: 1;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            border-radius: 14px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .luxury-input-group input:focus {
+            outline: none;
+            border-color: var(--luxury-gold);
+            box-shadow: 0 0 10px rgba(251,191,36,0.15);
+        }
+        .luxury-input-group button {
+            padding: 0 25px;
+            background: linear-gradient(135deg, var(--neon-blue), #0284c7);
+            border: none;
+            color: #fff;
+            border-radius: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(56,189,248,0.2);
+        }
+        select {
+            width: 100%;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.6);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        .ai-card-report {
+            background: rgba(56, 189, 248, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 15px;
+            border-radius: 16px;
+            margin-top: 15px;
+            border-left: 5px solid var(--neon-blue);
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
